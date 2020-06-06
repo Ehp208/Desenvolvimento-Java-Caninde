@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:sec="http://www.springframework.org/security/facelets/tags"
+	xmlns:util="http://java.sun.com/jsf/composite/components"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition template="/templates/templatePrincipal.xhtml">
+		<ui:define name="corpo">
+			<h:form id="formCadastro" prependId="false" >
+			 <c:set var="isCadastro" value="true" scope="view"/>
+				<p:panel header="Cadastro de Logradouro" id="panelCadastro">
+					<h:panelGrid id="gridLogradouro" columns="3">
+						<h:outputLabel value="ID : " 
+									   for="id" 
+									   id="labelId" />
+						<p:inputText id="id" 
+									 styleClass="estiloPequeno0" 
+									 value="#{logradouroBeanView.objetoSelecionado.log_id}"
+									 disabled="true" />
+						<h:outputLabel />
+	
+						<h:outputLabel value="Logradouro * : " 
+									   for="logradouro" 
+									   id="labelLogradouro" />
+						<p:inputText id="logradouro"
+									 value="#{logradouroBeanView.objetoSelecionado.log_nome}"
+									 required="true" 
+									 requiredMessage="Informe o nome do logradouro."
+									 maxlength="100" 
+									 styleClass="estiloGrande1"
+									 validatorMessage="" 
+									 title="Logradouro obrigatório."/>
+							
+						<p:message for="logradouro" />
+					</h:panelGrid>
+				</p:panel>
+	
+				<div class="espacoBranco" />
+	
+				<util:botoesCrud managedBeanView="#{logradouroBeanView}"
+								 camposReload=":formTemplate:msg, tableResult" 
+					   			 botaoNovo = "#{contextoBean.possuiAcesso('CEO', 'ADMIN')}"
+								 botaoSalvar = "#{contextoBean.possuiAcesso('CEO', 'ADMIN') and logradouroBeanView.objetoSelecionado.log_id == null}"
+								 botaoAtualizar = "#{contextoBean.possuiAcesso('CEO', 'ADMIN') and logradouroBeanView.objetoSelecionado.log_id != null}"
+								 botaoExcluir = "#{contextoBean.possuiAcesso('CEO', 'ADMIN')}"/>
+			</h:form>
+			
+			<script type="text/javascript" charset="UTF-8">
+				addFocoAoCampo('logradouro');
+				gerenciaTeclaEnter();
+			</script>
+			
+			<div class="espacoBranco" />
+	
+			<p:dataTable id="tableResult" 
+						 value="#{logradouroBeanView.list}" 
+						 rendered="#{logradouroBeanView.list.list.size() > 0}"
+						 var="objeto" 
+						 rows="10" 
+						 paginatorPosition="bottom" 
+						 paginator="true"
+						 lazy="true"
+				 		 emptyMessage="Não existem valores para exibição."
+						 paginatorTemplate=" {FirstPageLink}
+									  		 {PreviousPageLink} 
+											 {PageLinks} 
+		 									 {NextPageLink} 
+		 									 {LastPageLink} 
+		 									 {RowsPerPageDropdown}">
+	
+				<ui:include src="/resources/components/colunasDataTableLogradouro.xhtml" />
+			</p:dataTable>
+		</ui:define>
+	</ui:composition>
+</html>

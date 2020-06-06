@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:sec="http://www.springframework.org/security/facelets/tags"
+	xmlns:util="http://java.sun.com/jsf/composite/components"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition template="/templates/templatePrincipal.xhtml">
+		<ui:define name="corpo">
+			<h:form id="formCadastro" prependId="false" >
+			 <c:set var="isCadastro" value="true" scope="view"/> 				<!-- Não trocar o nome da var="isCadastro" -->
+				<p:panel header="Cadastro de Banco" id="panelBanco">
+					<h:panelGrid id="gridBanco" columns="3"> 					<!-- 1 colouna label 
+																					 2 coluna campo 
+																					 3 coluna onde vai exibir  -->
+						<h:outputLabel for="id" id="labelId" value="ID : " />   
+						<p:inputText id="id" styleClass="estiloPequeno0" 
+							value="#{bancoBeanView.objetoSelecionado.ban_id}" 	
+							disabled="true" /> 									
+																				<!-- value    ==> Ligação do campo com o banco de dados
+																					 disabled ==> true - Desabilita o campo
+																					 required ==> true - Campo obrigatório -->
+						<h:outputLabel />										<!-- Coluna em branco -->
+	
+						<h:outputLabel for="codigo" id="labelcodigo" value="Código * : " />
+						<p:inputText id="codigo"
+							value="#{bancoBeanView.objetoSelecionado.ban_codigo}"
+							required="true" requiredMessage="Informe o código do Banco."
+							maxlength="3" title="Código obrigatório."/>
+						<p:message for="codigo" />
+	
+						<h:outputLabel for="nome" id="labelnome" value="Nome * : " />
+						<p:inputText id="nome" 
+							value="#{bancoBeanView.objetoSelecionado.ban_nome}"
+							required="true" requiredMessage="Informe o nome do Banco."
+							maxlength="100" styleClass="estiloGrande1" title="Nome do Banco obrigatório."/>
+						<p:message for="nome" />
+						
+						
+<!-- Inicio dos campos de teste para complementar a pesquisa  -->	
+		
+<!--       Campo DATA              -->			
+<!--  
+						<p:column> 
+							<p:row>
+								<h:outputLabel for="ban_databaixa"
+									value="Data da Baixa : " id="labelDataBaixa" />
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:calendar locale="pt" showButtonPanel="true" showOn="button"
+									styleClass="calendar" pattern="dd/MM/yyyy" readonlyInput="true"
+									navigator="true" id="ban_databaixa"
+									value="#{bancoBeanView.objetoSelecionado.ban_databaixa}" />
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:message for="ban_databaixa" />
+							</p:row>
+						</p:column>
+						
+-->
+	
+<!--       Campo VALOR              -->			
+
+<!-- 
+							<p:column>
+								<p:row>
+									<h:outputLabel for="ban_valor" value="Valor R$: "/>
+								</p:row>
+							</p:column>
+													
+							<p:column>
+								<p:row>
+									<p:inputText id="ban_valor" 
+									   value="#{bancoBeanView.objetoSelecionado.ban_valor}">
+										<f:convertNumber for="ban_valor" type="number"/>
+									</p:inputText>
+								</p:row>
+							</p:column>
+													
+							<p:column>
+								<p:row>
+									<p:message for="ban_valor"/>
+								</p:row>
+							</p:column>					
+-->
+
+	
+					</h:panelGrid>
+				</p:panel>
+				<div class="espacoBranco" />
+	
+				<util:botoesCrud 
+					managedBeanView="#{bancoBeanView}"
+					camposReload=":formTemplate:msg, tableResult"
+					botaoNovo = "#{contextoBean.possuiAcesso('CEO', 'ADMIN', 'FIN')}"
+					botaoSalvar = "#{contextoBean.possuiAcesso('CEO', 'ADMIN', 'FIN') and bancoBeanView.objetoSelecionado.ban_id == null}"
+					botaoAtualizar = "#{contextoBean.possuiAcesso('CEO', 'ADMIN', 'FIN') and bancoBeanView.objetoSelecionado.ban_id != null}"
+					botaoExcluir = "#{contextoBean.possuiAcesso('CEO', 'ADMIN', 'FIN')}"/>
+			</h:form>
+			
+			<script type="text/javascript" charset="UTF-8">
+				addFocoAoCampo('codigo');
+				gerenciaTeclaEnter();
+			</script>
+			
+			<div class="espacoBranco" />
+	
+			<p:dataTable id="tableResult" value="#{bancoBeanView.list}" rendered="#{bancoBeanView.list.list.size() > 0}"
+				var="objeto" rows="10" paginatorPosition="bottom" paginator="true"
+				lazy="true"
+				emptyMessage="Não existem dados para exibição."
+				paginatorTemplate=" {FirstPageLink}
+									   {PreviousPageLink} {PageLinks} 
+		 							   {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+	
+				<ui:include src="/resources/components/colunasDataTableBanco.xhtml" />
+	
+			</p:dataTable>
+		</ui:define>
+	</ui:composition>
+</html>

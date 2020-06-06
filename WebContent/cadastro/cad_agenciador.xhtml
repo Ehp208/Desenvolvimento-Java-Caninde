@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:sec="http://www.springframework.org/security/facelets/tags"
+	xmlns:util="http://java.sun.com/jsf/composite/components"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition template="/templates/templatePrincipal.xhtml">
+		<ui:define name="corpo">
+			<h:form id="formCadastro" prependId="false" >
+			 <c:set var="isCadastro" value="true" scope="view"/>
+				<p:panel header="Cadastro de Agenciador" id="panelCadastro">
+					<h:panelGrid id="gridAgenciador" columns="3">
+						<p:column>
+							<p:row>
+								<h:outputLabel value="ID : " 
+											   for="id" 
+											   id="labelId" />
+							</p:row>
+						</p:column>										
+						<p:column>
+							<p:row>
+								<p:inputText id="id" 
+											 styleClass="estiloPequeno0" 
+											 value="#{agenciadorBeanView.objetoSelecionado.age_id}"
+											 disabled="true" />
+								<h:outputLabel />
+							</p:row>
+						</p:column>		
+						<p:column>
+							<p:row>
+								<p:message for="id" />
+							</p:row>
+						</p:column>										
+														
+						<p:column>
+							<p:row>	
+								<h:outputLabel value="Agenciador * : " 
+											   id="labelagenciador" 
+											   for="agenciadornome"/>
+							</p:row>
+						</p:column>										
+						<p:column>
+							<p:row>
+								<p:inputText id="agenciadornome"
+											 value="#{agenciadorBeanView.objetoSelecionado.age_nome}"
+											 required="true" 
+											 requiredMessage="Informe o nome da agenciador."
+											 maxlength="100" 
+											 styleClass="estiloGrande0" 
+											 title="Agenciador obrigatória."/>
+								<p:message for="agenciadornome" />
+							</p:row>
+						</p:column>										
+						<p:column>
+							<p:row>
+								<p:message for="agenciadornome" />
+							</p:row>
+						</p:column>										
+						
+						<p:column>
+							<p:row>	
+								<h:outputLabel value="Contato : " 
+											   id="labelcontato"
+											   for="contato"/>
+							</p:row>
+						</p:column>										
+						<p:column>
+							<p:row>
+								<p:inputText id="contato" 
+											 value="#{agenciadorBeanView.objetoSelecionado.age_contato}"
+											 required="true" 
+											 requiredMessage="Informe o nome do Contato."
+											 maxlength="50" 
+											 styleClass="estiloGrande0"/>
+							</p:row>
+						</p:column>										
+						<p:column>
+							<p:row>
+								<p:message for="contato" />
+							</p:row>
+						</p:column>										
+
+						<p:column>
+							<p:row>							
+								<h:outputLabel value="E-mail : " 
+								               id="labelEmail"  
+								               for="email"/>
+							</p:row>
+						</p:column>										
+						<p:column>
+							<p:row>
+								<p:inputText id="email"
+										     value="#{agenciadorBeanView.objetoSelecionado.age_email}"
+										     required="false" 
+										     requiredMessage="Informe o campo e-mail"
+										     maxlength="100" 
+										     styleClass="estiloGrande0">
+									<f:validateRegex pattern="[a-zA-Z0-9\-\_\.]+@[a-zA-Z0-9\-\_\.]+" />
+								</p:inputText>						
+							</p:row>
+						</p:column>										
+						<p:column>
+							<p:row>
+								<p:message for="email" />
+							</p:row>
+						</p:column>										
+
+						<p:column>
+							<p:row>							
+								<h:outputLabel value="Telefone : " 
+											   id="labeltelefone" 
+											   for="telefone"/>
+							</p:row>
+						</p:column>										
+						<p:column>
+							<p:row>
+								<p:inputMask id="telefone" 
+											 mask="(99) 9999-9999"
+											 value="#{agenciadorBeanView.objetoSelecionado.age_fone}"
+											 required="true" 
+											 requiredMessage="Informe o campo telefone."
+											 maxlength="20" 
+											 styleClass="estiloPequeno2" />
+							</p:row>
+						</p:column>										
+						<p:column>
+							<p:row>
+								<p:message for="telefone" />
+							</p:row>
+						</p:column>										
+
+						<p:column>
+							<p:row>							
+							<h:outputLabel value="Celular : " 
+										   id="labelcelular" 
+										   for="celular"/>
+							</p:row>
+						</p:column>										
+						<p:column>
+							<p:row>
+								<p:inputMask id="celular" 
+											 mask="(99) 9 9999-9999"
+											 value="#{agenciadorBeanView.objetoSelecionado.age_celular}"
+											 required="true" 
+											 requiredMessage="Informe o campo celular."
+											 maxlength="20" 
+											 styleClass="estiloPequeno2" />
+							</p:row>
+						</p:column>										
+						<p:column>
+							<p:row>
+								<p:message for="celular" />	
+							</p:row>
+						</p:column>
+							
+						<p:column>
+							<p:row>
+								<h:outputLabel id="labelInativo" 
+											   for="age_inativo" 
+											   value="Inativo : "/>
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:selectBooleanCheckbox id="age_inativo"
+														 value="#{agenciadorBeanView.objetoSelecionado.age_inativo}" />
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:message for="age_inativo" />
+							</p:row>
+						</p:column>
+
+
+					</h:panelGrid>
+				</p:panel>
+	
+				<div class="espacoBranco" />
+	
+				<util:botoesCrud managedBeanView="#{agenciadorBeanView}"
+					camposReload=":formTemplate:msg, tableResult"
+					botaoSalvar = "#{contextoBean.possuiAcesso('USER') and agenciadorBeanView.objetoSelecionado.age_id == null}"/>
+	
+			</h:form>
+			
+			<script type="text/javascript" charset="UTF-8">
+				addFocoAoCampo('agenciadornome');
+				gerenciaTeclaEnter();
+	
+			</script>
+			
+			<div class="espacoBranco" />
+	
+			<p:dataTable id="tableResult" value="#{agenciadorBeanView.list}" rendered="#{agenciadorBeanView.list.list.size() > 0}"
+				var="objeto" rows="10" paginatorPosition="bottom" paginator="true"
+				lazy="true"
+				emptyMessage="Não existem dados para exibição."
+				paginatorTemplate=" {FirstPageLink}
+								    {PreviousPageLink} 
+								    {PageLinks} 
+								    {NextPageLink} 
+								    {LastPageLink} 
+								    {RowsPerPageDropdown}">
+	
+				<ui:include src="/resources/components/colunasDataTableAgenciador.xhtml" />
+	
+			</p:dataTable>
+		</ui:define>
+	</ui:composition>
+</html>

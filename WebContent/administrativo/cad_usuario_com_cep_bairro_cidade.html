@@ -1,0 +1,346 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:sec="http://www.springframework.org/security/facelets/tags"
+	xmlns:util="http://java.sun.com/jsf/composite/components"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition template="/templates/templatePrincipal.xhtml">
+		<ui:define name="corpo">
+			<h:form id="formCadastro" prependId="false">
+				<c:set var="isCadastro" value="true" scope="view"/>
+				<p:panel header="Cadastro de Usuário" id="panelCadastro">
+					<p:panelGrid id="gridUsuario" columns="3">
+						<p:column>
+							<p:row>
+								<h:outputLabel id="labelId" 
+											   for="id"
+											   value="Código : " 
+											   style="width:300px;" />
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:inputText id="id" 
+											 styleClass="estiloPequeno0"
+											 value="#{usuarioBeanView.objetoSelecionado.ent_id}"
+											 readonly="true" />
+							</p:row>						
+							<p:row>
+								<h:outputLabel id="labelDataCadastro"
+											   for="ent_datacadastro" 
+											   value="Data do cadastro : "
+											   style="padding-left: 20px;" />
+							</p:row>						
+						
+					    	<p:inputText id="ent_datacadastro" 
+					    				 readonly="true" 
+					    				 style="width: 150px;"
+										 value="#{usuarioBeanView.objetoSelecionado.ent_datacadastro}">
+								<f:convertDateTime locale="pt_BR" 
+												   pattern="dd/MM/yyyy HH:mm:ss"
+												   dateStyle="long" 
+												   timeStyle="full" 
+												   timeZone="GMT-03:00" />
+							</p:inputText>						
+						</p:column>
+						
+						<p:column />
+											
+						<p:column>
+							<p:row>
+								<h:outputLabel  id="labelNome"
+												for="ent_nome"
+												value="Nome * : " />
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:inputText id="ent_nome"
+											 value="#{usuarioBeanView.objetoSelecionado.ent_nome}"
+											 required="true" 
+											 requiredMessage="Informe o campo nome Usuário."
+											 maxlength="100" 
+											 styleClass="estiloMedio2"/>
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:message for="ent_nome" />
+							</p:row>
+						</p:column>
+												
+						<p:column>
+							<p:row>
+								<h:outputLabel id="labelEmailContato"
+											   for="ent_emailcontato" 
+											   value="E-mail contato * : " />
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:inputText id="ent_emailcontato"
+											 value="#{usuarioBeanView.objetoSelecionado.ent_emailcontato}"
+											 required="true"
+											 requiredMessage="Informe o campo e-mail contato."
+											 maxlength="100" 
+											 styleClass="estiloMedio2">
+									<f:validateRegex pattern="[a-zA-Z0-9\-\_\.]+@[a-zA-Z0-9\-\_\.]+" />
+								</p:inputText>
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:message for="ent_emailcontato" />
+							</p:row>
+						</p:column>
+
+						<p:column>
+							<p:row>
+								<h:outputLabel for="ent_cep" id="labelEnt_cep" value="CEP : " />
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:inputMask id="ent_cep" mask="99999-999"
+									value="#{usuarioBeanView.objetoSelecionado.ent_cep}"
+									required="false" requiredMessage="Informe o campo cep."
+									maxlength="100" styleClass="estiloPequeno0" />
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:message for="ent_cep" />
+							</p:row>
+						</p:column>
+
+
+						<p:column>
+							<p:row>
+								<h:outputLabel value="Cidade : " id="labelIdCidade"  for="cid_id" />
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:inputText id="cid_id" 
+											 value="1"/>
+								<p:inputText id="cid_nome" 
+											 readonly="true" 
+											 value="Cidade Instalação"/>
+							</p:row>
+						</p:column>						
+						<p:column>
+							<p:row>
+								<p:message for="cid_id" />
+							</p:row>
+						</p:column>
+
+						<p:column>
+							<p:row>
+								<h:outputLabel for="bai_id" value="Bairro : "
+									id="labelIdBairro" />
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:inputText id="bai_id" 
+											 readonly="true"
+											 value="1"/>
+								<p:inputText id="bai_nome" 
+											 readonly="true" 
+											 value="Bairro Instalação"/>
+							</p:row>	
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:message for="bai_id" />
+							</p:row>
+						</p:column>				
+												
+						<p:column rendered="#{usuarioBeanView.objetoSelecionado.ent_id != null}">
+							<p:row>
+								<h:outputLabel id="labelInativo" 
+											   for="ent_inativo" 
+											   value="Inativo : "/>
+							</p:row>
+						</p:column>
+						<p:column rendered="#{usuarioBeanView.objetoSelecionado.ent_id != null}">
+							<p:row>
+								<p:selectBooleanCheckbox id="ent_inativo"
+														 value="#{usuarioBeanView.objetoSelecionado.ent_inativo}" />
+							</p:row>
+						</p:column>
+						<p:column rendered="#{usuarioBeanView.objetoSelecionado.ent_id != null}">
+							<p:row>
+								<p:message for="ent_inativo" />
+							</p:row>
+						</p:column>
+						
+						<p:column rendered="#{usuarioBeanView.objetoSelecionado.ent_id != null}">
+							<p:row>
+								<h:outputLabel id="labelUltimoAcesso" 
+											   for="ent_ultimoacesso" 
+											   value="Ultimo acesso : "/>
+							</p:row>
+						</p:column>
+						<p:column rendered="#{usuarioBeanView.objetoSelecionado.ent_id != null}">
+							<p:row>
+								<p:inputText id="ent_ultimoacesso" 
+											 readonly="true"
+											 value="#{usuarioBeanView.objetoSelecionado.ent_ultimoacesso}">
+									<f:convertDateTime locale="pt_BR" 
+													   pattern="dd/MM/yyyy HH:mm:ss"
+													   dateStyle="long" 
+													   timeStyle="full" 
+													   timeZone="GMT-03:00" />
+								</p:inputText>
+							</p:row>
+						</p:column>
+						<p:column rendered="#{usuarioBeanView.objetoSelecionado.ent_id != null}">
+							<p:row>
+								<p:message for="ent_ultimoacesso" />
+							</p:row>
+						</p:column>						
+					</p:panelGrid>
+					
+					<p:fieldset legend="Senha" style=" padding-left: 37px;"> 
+						<p:panelGrid id="gridUsuarioSenha" columns="3">
+							<p:column>
+								<p:row>
+									<h:outputLabel id="labelLogin"
+												   for="ent_login" 
+												   value="Login : " 
+												   style="width:300px;" />
+								</p:row>
+							</p:column>
+							<p:column>
+								<p:row>
+									<p:inputText id="ent_login" 
+												 styleClass="estiloPequeno0"
+												 maxlength="20"
+												 value="#{usuarioBeanView.objetoSelecionado.ent_login}"
+												 required="true" requiredMessage="Informe o campo login." />
+								</p:row>
+							</p:column>
+							<p:column>
+								<p:row>
+									<p:message for="ent_login" />
+								</p:row>
+							</p:column>
+
+							<p:column>
+								<p:row>
+									<h:outputLabel id="labelSenha"
+												   for="ent_senha" 
+												   value="Senha : " 
+												   style="width:300px;" />
+								</p:row>
+							</p:column>
+							<p:column>
+								<p:row>
+									<p:password id="ent_senha" 
+												styleClass="estiloPequeno0"
+												maxlength="20" 
+												feedback="true" 
+												promptLabel="Informe a senha"
+												weakLabel="Ruim"
+												goodLabel="Boa"
+												strongLabel="Ótima"
+												value="#{usuarioBeanView.objetoSelecionado.ent_senha}"
+												required="true" 
+												requiredMessage="Informe o campo senha." />
+								</p:row>
+							</p:column>
+							<p:column>
+								<p:row>
+									<p:message for="ent_senha" />
+								</p:row>
+							</p:column>
+
+							<p:column>
+								<p:row>
+									<h:outputLabel id="labelMudarSenha"
+												   for="ent_mudarsenha" 
+												   value="Mudar senha : "
+									 			   style="width:300px;" />
+								</p:row>
+							</p:column>
+							<p:column>
+								<p:row>
+									<p:selectBooleanCheckbox id="ent_mudarsenha"
+															 value="#{usuarioBeanView.objetoSelecionado.ent_mudarsenha}" />
+								</p:row>
+							</p:column>
+							<p:column>
+								<p:row>
+									<p:message for="ent_mudarsenha" />
+								</p:row>
+							</p:column>
+						</p:panelGrid>
+					</p:fieldset>
+				</p:panel>
+
+ 				<div class="espacoBranco" />
+ 			
+				<util:botoesCrud managedBeanView="#{usuarioBeanView}"
+						  		 camposReload=":formTemplate:msg, tableResult"
+								 botaoNovo = "#{contextoBean.possuiAcesso('USUARIO_NOVO', 'CEO')}"
+								 botaoSalvar = "#{contextoBean.possuiAcesso('USUARIO_NOVO', 'CEO') and usuarioBeanView.objetoSelecionado.ent_id == null}"
+								 botaoAtualizar = "#{contextoBean.possuiAcesso('USUARIO_EDITAR', 'CEO') and usuarioBeanView.objetoSelecionado.ent_id != null}"
+								 botaoExcluir = "#{contextoBean.possuiAcesso('USUARIO_EXCLUIR', 'CEO')}"/>					
+			</h:form>
+			
+			<script type="text/javascript" charset="UTF-8">
+				addFocoAoCampo('ent_nome');
+				gerenciaTeclaEnter();
+			</script>
+
+			<div class="espacoBranco" />
+
+			<p:dataTable id="tableResult" 
+						 value="#{usuarioBeanView.list}" 
+						 rendered="#{usuarioBeanView.list.list.size() > 0}"
+						 var="objeto" 
+						 rows="10" 
+						 paginatorPosition="bottom" 
+						 paginator="true"
+						 emptyMessage="Não existem usuários para exibição." 
+						 lazy="true"
+						 paginatorTemplate=" {FirstPageLink}
+						  			   	     {PreviousPageLink} 
+						  			   	     {PageLinks} 
+	 							   			 {NextPageLink} 
+	 							   			 {LastPageLink} 
+	 							   			 {RowsPerPageDropdown}">
+				<ui:include
+					src="/resources/components/colunasDataTableUsuario.xhtml" />
+			</p:dataTable>
+
+			<p:dialog widgetVar="bairroDialog" id="bairroDialog" width="1000"
+				modal="true" resizable="false" height="400"
+				header="Consulta de bairro" appendToBody="false" dynamic="true">
+				<util:pesquisa managedBeanView="#{bairroBeanView}"
+					nomePesquisa="Pesquisa de Bairro"
+					colunasGridDataTableList="/resources/components/colunasDataTableBairro.xhtml"
+					exibirBotaoAdd="true" ocultaNovo="true"
+					funcaoJavaScript="bairroDialog.hide(),addBairroSelecionadoUsuario('#{objeto.json}')">
+				</util:pesquisa>
+			</p:dialog>
+	
+			<p:dialog widgetVar="cidadeDialog" id="cidadeDialog" width="1000"
+				modal="true" resizable="false" height="400"
+				header="Consulta de cidade" appendToBody="false" dynamic="true">
+				<util:pesquisa managedBeanView="#{cidadeBeanView}"
+					nomePesquisa="Pesquisa de Cidade"
+					colunasGridDataTableList="/resources/components/colunasDataTableCidade.xhtml"
+					exibirBotaoAdd="true" ocultaNovo="true"
+					funcaoJavaScript="cidadeDialog.hide(),addCidadeSelecionadoUsuario('#{objeto.json}')">
+				</util:pesquisa>
+			</p:dialog>
+		
+	</ui:define>
+</ui:composition>
+</html>

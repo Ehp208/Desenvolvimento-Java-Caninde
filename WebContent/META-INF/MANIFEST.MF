@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Permissions: all-permissions
+Application-Name: Canindé - Embarcador
+Specification-Title: Eduardo by Rabbit Informatica Ltda.
+Specification-Vendor: Eduardo by Rabbit Informatica Ltda.
+Implementation-Vendor: Eduardo by Rabbit Informatica Ltda.
+Codebase: * 
+Trusted-Library: true
+Trusted-Only: true
+Application-Library-Allowable-Codebase: *
+Caller-Allowable-Codebase: *

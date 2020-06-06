@@ -1,0 +1,7 @@
+CREATE OR REPLACE FUNCTION valor_Final(text) 
+RETURNS text AS 
+$BODY$ 
+select
+coalesce($1, '99999999999');
+$BODY$ 
+LANGUAGE 'sql' IMMUTABLE STRICT; 

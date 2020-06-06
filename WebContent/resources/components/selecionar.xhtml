@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/facelets/tags"
+	xmlns:util="http://java.sun.com/jsf/composite/components"
+	xmlns:composite="http://java.sun.com/jsf/composite">
+	
+	<h:form id="formPesquisa" prependId="false">	
+		<composite:interface displayName="interfacePesquisa" name="interfacePesquisa">
+			<composite:attribute name="managedBeanView" required="true" />
+			<composite:attribute name="tipoEntidadeTemp" required="false" />
+<!--  			<composite:attribute name="tipoTituloEmAberto" required="false" />      -->
+			<composite:attribute name="nomePesquisa" required="true" />
+			<composite:attribute name="colunasGridDataTableList" required="true" />
+			<composite:attribute name="exibirBotaoAdd" required="true" />
+			<composite:attribute name="camposReload" required="false" />
+			<composite:attribute name="ocultaNovo" required="true" />
+			<composite:attribute name="funcaoJavaScript" required="false" />
+			<composite:attribute name="menuImpressao" required="false" default="false"/>
+			<composite:attribute name="exportPage" required="false" default="false"/>
+			<composite:attribute name="consultarInativos" required="false" default="false"/>
+		</composite:interface>
+
+		<composite:implementation>
+			<c:set var="isCadastro" value="false" scope="view"/>
+
+<!-- 
+			<h:inputHidden binding="#{cc.attrs.managedBeanView.htmlInputHiddenTitulo}" value="#{cc.attrs.tipoTituloEmAberto}" immediate="true">
+				<f:attribute name="tipoTituloEmAberto" value="#{cc.attrs.tipoTituloEmAberto}"/>
+			</h:inputHidden>
+ -->		
+ 
+			<h:inputHidden binding="#{cc.attrs.managedBeanView.htmlInputHidden}" 
+						   value="#{cc.attrs.tipoEntidadeTemp}" 
+						   immediate="true">
+				<f:attribute name="tipoEntidadeTemp" 
+							 value="#{cc.attrs.tipoEntidadeTemp}"/>
+			</h:inputHidden>
+
+
+
+
+
+
+
+
+
+
+
+    	<div style="margin-top: 5px; margin-bottom: 20px">
+    		<p:inputText id="nome" size="40" value="#{selecaoClienteBean.nome}" placeholder="Dado para pesquisa" />    		
+    		<p:spacer width="10px"/>
+    		
+    		<p:commandButton value="Pesquisar" action="#{selecaoClienteBean.pesquisar}" update="@form" />
+    	</div>
+    	
+    	<p:dataTable value="#{selecaoClienteBean.clientesFiltrados}" var="cliente"
+    		emptyMessage="Nenhum cliente encontrado." rows="10"
+    		paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom">
+    		
+    		<p:column headerText="Código" style="text-align: center; width: 40px">
+    			<h:outputText value="#{cliente.id}" />
+    		</p:column>
+    		<p:column headerText="Nome">
+    			<h:outputText value="#{cliente.nome}" />
+    		</p:column>
+    		<p:column style="width: 30px; text-align: center">
+    			<p:commandButton icon="ui-icon-check" title="Selecionar"
+    				action="#{selecaoClienteBean.selecionar(cliente)}"
+    				process="@this" />
+    		</p:column>
+    		
+    	</p:dataTable>
+	</h:form>
+
+</h:body>
+</html>

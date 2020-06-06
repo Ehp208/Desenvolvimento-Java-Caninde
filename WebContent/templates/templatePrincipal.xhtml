@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:sec="http://www.springframework.org/security/facelets/tags"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<sec:isAuthenticated>
+		<h:head>
+				<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+				<title> 
+					<ui:insert name="titulo">Canindé - Embarcador</ui:insert>
+				</title>
+				<h:outputScript name="primefaces.js" library="primefaces" id="jsPrime"/>
+				<h:outputScript name="jquery.js" library="primefaces/jquery" id="jsJquery"/>
+				<h:outputScript name="jquery-plugins.js" library="primefaces/jquery" id="jsJqueryPlugin"/>
+				<h:outputScript name="jquery.cookie.js" library="javascript" id="jsJaqueryCookie"/>
+				<h:outputStylesheet name="jquery-ui.css" library="primefaces/jquery/ui" id="jsJqueryUi"/>
+				<h:outputStylesheet name="primefaces.css" library="primefaces" id="jdPrimeCss"/>
+				<h:outputScript name="jquery.maskMoney.min.js" library="javascript" id="jsMaskMoneySistema"/>
+				<h:outputScript name="jquery.maskedinput.js" library="javascript" id="jsMaskInputSistema"/>
+				<h:outputScript name="scripty.js" library="javascript" id="jsScriptSistema"/>
+				<h:outputScript name="jsf.js" library="javax.faces"/>
+				<h:outputScript name="googlechart.js" library="javascript"/> 
+				<h:outputScript name="deployJava.js"  library="javascript" />
+		</h:head>
+	
+		<h:form id="formTemplate" prependId="false">
+			<h:outputStylesheet name="estilo.css" library="css" id="cssStiloSistema"/>
+			<h:body >
+		 		<script type="text/javascript" charset="UTF-8">    
+		 	    	$.noConflict();
+		 	  		localeData_pt_br();
+			    	initTamplete();
+					ocultarMenu();  
+				
+					$(document).keydown(function(e) {
+					if (e.which == 116) {
+						return false;
+					}
+					});
+				
+					/*$(window).bind('beforeunload', function(e){// peder confirmação para atualizar ou sair da pagina
+						e = e || window.event;
+						var message = "Deseja realmente sair do sistema?";
+					
+						if(e) e.returnValue = message;
+							return message;	
+					});*/			
+				</script>
+				
+				<ui:include src="/templates/barraProgresso.xhtml" />
+					<div id="msgError" class="espacoMensagem">
+						<p:growl id="msg" 
+					    	     showDetail="false" 
+					        	 sticky="true" 
+						         redisplay="true" 
+						         autoUpdate="true" 
+						         life="500" />  
+							<p:tooltip id="toolTipFocus" 
+					        		   globalSelector="a,:input,:button" 
+							           showEvent="focus" 
+							           hideEvent="blur" />
+					</div>
+					<div id="container">
+						<div id="topo">
+							<span style="position: absolute; left: 20px; top: 14px" id="spanLogo">
+								<h:graphicImage id="logoImg"
+												library="img" 
+												name="logo.png" 
+												styleClass="bordaImagem" />
+							</span> 
+							<span id="dadoslogin"> 
+								Usuário: #{entidadeBeanView.usuarioLogadoSecurity}
+								<br id="quebraUser"/> 
+								Último login: 
+								<h:outputLabel id="saidaUltimoAcesso" 
+							    	           value="#{entidadeBeanView.ultimoAcesso}" >
+									<f:convertDateTime locale="pt_BR" 
+													   pattern="dd/MM/yyyy HH:mm:ss"
+						   							   dateStyle="long" 
+						   							   timeStyle="full" 
+						   							   timeZone="GMT-03:00"/>
+								</h:outputLabel>
+							
+							<br id="quebraUltimoAcesso"/> 
+							
+							<a href="#" id="logoutSuperior" onclick="javascript:logout('#{request.contextPath}');">Sair</a>
+						</span>
+						 
+						<span id="menuSistema" style="position: absolute; right: 25px; top: 48px; width: 20px">
+							<a href="#" onclick="abrirMenupop()">
+								<h:graphicImage id="imaSetaBaixo"
+												library="img" 
+												name="setabaixo.png"
+												styleClass="bordaImagem" />
+							</a>
+						</span> 
+					</div>
+					
+					<div id="menu">
+		   				 <span id="iniciarmenu">
+		   				 	<h:graphicImage id="iconemenu" 
+		   				 					library="img" 
+		   				 					name="iconemenu.png"
+											styleClass="bordaImagem" >
+								Menu
+							</h:graphicImage>
+		   				 </span>
+		 		    </div>
+		 		    
+		 		    <div id="corpo" class="corpo">
+						<ui:insert name="corpo" />
+					</div>
+					
+					<div id="menupop">
+						<sec:ifAnyGranted roles="USER">		
+							<p:commandLink id="enviarMensagem"
+										   value="Enviar mensagem"
+										   actionListener="#{mensagemBeanView.novo}" 
+										   onsuccess ="enviarMsgDialog.show();"
+							 			   immediate="true"
+							 			   style="display:block"  
+							 			   ajax="true"  
+							 			   process="@this">
+							 	<p:ajax immediate="true" listener="#{mensagemBeanView.novo}"/>
+							 </p:commandLink>
+						 </sec:ifAnyGranted>
+		   			 	
+		   			 	<a href='#'  id="alterarSenha" onclick="alterarSenhaDialog.show();" style="display:block">
+		   			 		<span style="display:block" id="spanAlterarSenha">Alterar senha</span>
+		   			 	</a>
+		  			</div>
+		  			
+					<div id="barramenu">
+						<p:tieredMenu style="width: 185px;border: none;background: none;color: #000;" id="menuEsquerdo">
+			
+<!-- Menu Administrativo -->						 						 
+			
+							<sec:ifAnyGranted roles="CEO, ADMIN">	 
+								<p:submenu id="menuAdministrativo" label="Administrativo" >
+								
+									<sec:ifAnyGranted roles="CEO, ADMIN">	 
+										<p:menuitem id="menuUsuario" 
+												    value="Usuário" 
+													onclick="redirecionarPage('#{request.contextPath}','/administrativo/', 'find_usuario')"
+													ajax="true" />
+									</sec:ifAnyGranted>
+
+									<sec:ifAnyGranted roles="CEO">	 
+										<p:menuitem id="menuPessoaFisica" 
+												    value="Pessoa Física" 
+													onclick="redirecionarPage('#{request.contextPath}','/administrativo/', 'find_pessoaFisica')"
+													ajax="true" />
+									</sec:ifAnyGranted>
+
+									<sec:ifAnyGranted roles="CEO">	 
+										<p:menuitem id="menuPessoaJuridica" 
+												    value="Pessoa Jurídica" 
+													onclick="redirecionarPage('#{request.contextPath}','/administrativo/', 'find_pessoaJuridica')"
+													ajax="true" />
+									</sec:ifAnyGranted>
+												
+									<sec:ifAnyGranted roles="CEO">	 
+										<p:menuitem id="menuPessoaMotorista" 
+												    value="Motorista" 
+													onclick="redirecionarPage('#{request.contextPath}','/administrativo/', 'find_pessoaJuridica')"
+													ajax="true" />
+									</sec:ifAnyGranted>
+
+									<sec:ifAnyGranted roles="CEO">	 
+										<p:menuitem id="menuServidorEmail"
+													value="Servidor E-Mail" 
+													onclick="redirecionarPage('#{request.contextPath}','/administrativo/', 'find_servidoremail')"
+													ajax="true" />
+									</sec:ifAnyGranted>
+																																			
+									<sec:ifAnyGranted roles="CEO">	 
+										<p:menuitem id="menuParametro"
+													value="Parametro" 
+													onclick="redirecionarPage('#{request.contextPath}','/administrativo/', 'find_parametro')"
+													ajax="true" />
+									</sec:ifAnyGranted>
+																		
+									<sec:ifAnyGranted roles="CEO">		
+										<p:menuitem id="menupais"
+													value="Pais" 
+													onclick="redirecionarPage('#{request.contextPath}','/administrativo/', 'find_pais')"
+													ajax="true"  />
+									</sec:ifAnyGranted>
+	
+								</p:submenu>
+							</sec:ifAnyGranted>
+								
+<!-- Menu Cadastro -->
+								
+							<sec:ifAnyGranted roles="CEO, ADMIN, EMB, COR, AGE, FIN">	 
+								<p:submenu id="menuCadastro" label="Cadastro" >
+									
+									<sec:ifAnyGranted roles="CEO, ADMIN, EMB, COR, AGE, FIN">	 
+										<p:menuitem id="menuEntidade"
+													value="Entidade" 
+													onclick="redirecionarPage('#{request.contextPath}','/cadastro/', 'find_entidade')"
+													ajax="true"  />
+									</sec:ifAnyGranted>
+											
+									<sec:ifAnyGranted roles="CEO, ADMIN">		
+										<p:menuitem id="menuagenciador"
+													value="Agenciador" 
+													onclick="redirecionarPage('#{request.contextPath}','/cadastro/', 'find_agenciador')"
+													ajax="true"  />
+									</sec:ifAnyGranted>
+									
+									<sec:ifAnyGranted roles="CEO, ADMIN">		
+										<p:menuitem id="menuproduto"
+													value="Produto" 
+													onclick="redirecionarPage('#{request.contextPath}','/cadastro/', 'find_produto')"
+													ajax="true"  />
+									</sec:ifAnyGranted>
+
+									<p:submenu  id="menuCadastroLocalidade" label="Localidade">
+										<sec:ifAnyGranted roles="CEO, ADMIN">		
+											<p:menuitem	id="menulogradouro"
+														value="Logradouro"
+														onclick="redirecionarPage('#{request.contextPath}','/cadastro/localidade/', 'find_logradouro')"
+														ajax="true" />	
+										</sec:ifAnyGranted>		
+	
+										<sec:ifAnyGranted roles="CEO, ADMIN">		
+											<p:menuitem	id="menubairro"
+														value="Bairro"
+														onclick="redirecionarPage('#{request.contextPath}','/cadastro/localidade/', 'find_bairro')"
+														ajax="true" />	
+										</sec:ifAnyGranted>		
+	
+										<sec:ifAnyGranted roles="CEO, ADMIN">		
+											<p:menuitem id="menucidade"
+														value="Cidade" 
+														onclick="redirecionarPage('#{request.contextPath}','/cadastro/localidade/', 'find_cidade')"
+														ajax="true"  />
+										</sec:ifAnyGranted>
+																		
+										<sec:ifAnyGranted roles="CEO, ADMIN">		
+											<p:menuitem id="menucep"
+														value="Cep" 
+														onclick="redirecionarPage('#{request.contextPath}','/cadastro/localidade/', 'find_cep')"
+														ajax="true"  />
+										</sec:ifAnyGranted>
+									</p:submenu>
+									
+									
+									
+									
+
+								</p:submenu>
+								
+							</sec:ifAnyGranted>
+								
+			
+<!-- Menu Negócios -->
+			
+							<sec:ifAnyGranted roles="CEO, ADMIN, COR">	 
+								<p:submenu label="Negócio" id="menuNegocio">
+								
+									<p:submenu  id="menuContrato" label="Contrato">
+										<sec:ifAnyGranted roles="CEO, ADMIN, COR">	 
+											<p:menuitem id="menuMovimentacaoContrato"
+														value="Movimentação Contrato" 
+														onclick="redirecionarPage('#{request.contextPath}','/negocio/', 'find_contrato')"
+														ajax="true" />
+										</sec:ifAnyGranted>							
+			
+										<sec:ifAnyGranted roles="CEO, ADMIN">	 
+											<p:menuitem id="menuAprovacaoContrato" 
+														value="Aprovação Contrato" 
+														onclick="redirecionarPage('#{request.contextPath}','/negocio/', 'find_aprovacaocontrato')"
+														ajax="true" />
+										</sec:ifAnyGranted>							
+									</p:submenu>
+														
+								</p:submenu>
+							</sec:ifAnyGranted>
+			
+			
+			
+<!-- Menu Logística -->									 						 
+			
+			
+							<sec:ifAnyGranted roles="CEO, ADMIN, EMB, AGE">	 
+								<p:submenu id="menuLogistica" label="Logística" >
+								
+									<p:submenu id="subMenuEmbarque" label="Embarque" >
+										<sec:ifAnyGranted roles="CEO, ADMIN, EMB">	 
+											<p:menuitem id="menuEmbarque"
+														value="Embarque" 
+														onclick="redirecionarPage('#{request.contextPath}','/logistica/', 'find_embarque')"
+														ajax="true" />
+										</sec:ifAnyGranted>							
+			
+									</p:submenu>
+														
+								</p:submenu>
+							</sec:ifAnyGranted>
+			
+			
+<!-- Menu Financeiro -->									 
+			
+			
+							<sec:ifAnyGranted roles="CEO, ADMIN, FIN">
+								<p:submenu id="menuFinanceiro" label="Financeiro" >
+			
+									<p:submenu id="menuCadastroFinanceiro" label="CadastroFinanceiro" >
+			
+										<sec:ifAnyGranted roles="CEO, ADMIN, FIN">	 
+											<p:menuitem id="menuBanco" 
+														value="Banco" 
+														onclick="redirecionarPage('#{request.contextPath}','/financeiro/cadastro/', 'find_banco')"
+														ajax="true" />
+										</sec:ifAnyGranted>		
+									</p:submenu>
+								</p:submenu>							
+							</sec:ifAnyGranted>	
+								
+			
+<!-- Menu Aplicativo -->
+			
+							<sec:ifAnyGranted roles="CEO, ADMIN">	 
+								<p:submenu id="menuAplicativo" label="Aplicativo" >
+								
+														
+								</p:submenu>
+							</sec:ifAnyGranted>
+									 
+					
+				
+<!-- Menu Loja -->
+			
+							<sec:ifAnyGranted roles="CEO, ADMIN">	 
+								<p:submenu id="menuLoja" label="Loja" >
+								
+								</p:submenu>
+							</sec:ifAnyGranted>
+				
+				
+									 
+									 
+<!-- Menu Site -->
+			
+							<sec:ifAnyGranted roles="CEO, ADMIN">	 
+								<p:submenu id="menuSite" label="Site" >
+								
+														
+								</p:submenu>
+							</sec:ifAnyGranted>
+									 
+<!-- Mensagem -->
+			
+							<sec:ifAnyGranted roles="USER">
+								<p:submenu id="menuMensagem" label="Mensagens" >
+									<sec:ifAnyGranted roles="USER">
+										<p:menuitem id="menuMensagemRecebida"
+													value="Mensagens recebidas" 
+													onclick="redirecionarPage('#{request.contextPath}','/cadastro/', 'msg_recebidas')"
+													ajax="true" />	
+									</sec:ifAnyGranted>		
+									
+									<sec:ifAnyGranted roles="USER">		
+										<p:menuitem id="menuMensagemEnviada" 
+													value="Enviar mensagem" 
+													onclick="redirecionarPage('#{request.contextPath}','/cadastro/', 'find_mensagem')"
+													ajax="true" />	
+									</sec:ifAnyGranted>		
+								</p:submenu>
+							</sec:ifAnyGranted>
+									 
+									 
+<!-- Testes -->
+			
+									
+							<sec:ifAnyGranted roles="CEO, APPLET_FILE_LOCAL">
+								<p:menuitem id="menuAppletFileLocal"
+											value="Teste ler arquivo local applet" 
+			   								onclick="invocaAppletFileLocal('#{request.contextPath}');"
+											ajax="true" 
+											async="false" 
+											oncomplete="PF('statusDialog').hide()"/>						
+								<p:menuitem id="menuImpressaoLocalWeb"
+											value="Impressão local web" 
+			 								onclick="invocaApplet('#{request.contextPath}');"
+											ajax="true" async="false" oncomplete="PF('statusDialog').hide()"/>	
+							</sec:ifAnyGranted>
+									
+							<p:menuitem id="menuenviarmensagem"
+										value="Enviar mensagem" 
+										actionListener="#{mensagemBeanView.novo}"
+										onclick="redirecionarPagina('#{request.contextPath}','/cadastro/cad_mensagem');" 
+										ajax="true" />							
+							<p:menuitem id="menualterarsenha" 
+										value="Alterar senha" 
+										onclick="alterarSenha('#{request.contextPath}');" 
+										ajax="true" />							
+							<p:menuitem id="menuinicio"
+										value="Início" 
+										onclick="redirecionarPagina('#{request.contextPath}','/restrito/principal');"  
+										ajax="true" />						
+							<p:menuitem id="menusair"
+										value="Sair" 
+										onclick="javascript:logout('#{request.contextPath}');"
+										ajax="true" />
+						</p:tieredMenu>
+					</div>
+				</div>
+					
+					
+				<p:dialog id="alterarSenhaDialog"
+						  widgetVar="alterarSenhaDialog"  
+						  width="240"
+						  modal="true" 
+						  resizable="false" 
+						  height="170"
+						  header="Alterar senha" 
+						  appendToBody="false" 
+						  dynamic="true">				
+					<ui:include src="/administrativo/dialog_alterar_senha.xhtml"/>
+				</p:dialog>
+								
+				<p:dialog id="alterarMsgDialog"
+						  widgetVar="enviarMsgDialog"  
+						  width="800"
+						  modal="true" 
+						  resizable="false" 
+						  height="360"
+						  header="Enviar menssagem" 
+						  appendToBody="false" 
+						  dynamic="true">
+					<ui:include src="/cadastro/dialog_enviar_msg.xhtml"/>
+				</p:dialog>
+					
+			</h:body>
+		</h:form>
+		
+		<h:form id="formVerificaMsg" prependId="false" >
+		  <sec:ifAnyGranted roles="USER">
+			<p:poll id="verificaMsg"
+					interval="600" 
+					listener="#{mensagemBeanView.verificar}" 
+					onsuccess="verificaMsgNaoLidas();"
+					async="true" 
+					update=":formTemplate:msg" /> 
+				<span id="avisomensagem"
+					  style="position: absolute; 
+					  right: 250px; 
+					  top: 14px"> 
+					<a href="#" id="mensagem"> 
+						<span id="contadormensagem"
+							  style="display: inline-block; 
+							  position: absolute; 
+							  top: 4px; 
+							  left: 35px; 
+							  font-weight: bold">&nbsp;
+						</span> 
+						
+						<p:commandLink action="#{mensagemBeanView.msgRecebidas}" 
+									   ajax="true" 
+									   process="@this">
+							<h:graphicImage id="mail"
+											library="img"
+											name="mail.png"  
+											styleClass="bordaImagem" /> 
+						</p:commandLink>
+					</a> 			
+				</span>
+				
+			</sec:ifAnyGranted>
+		</h:form>
+	
+		<script type="text/javascript" charset="UTF-8">
+			carregarIdElementosPagina();
+			verificaMsgNaoLidas();
+		</script>
+	</sec:isAuthenticated>
+</html>

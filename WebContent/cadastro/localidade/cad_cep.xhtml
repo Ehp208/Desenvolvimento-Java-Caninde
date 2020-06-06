@@ -1,0 +1,235 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:sec="http://www.springframework.org/security/facelets/tags"
+	xmlns:util="http://java.sun.com/jsf/composite/components"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition template="/templates/templatePrincipal.xhtml">
+		<ui:define name="corpo">
+			<h:form id="formCadastro" prependId="false" >
+			 <c:set var="isCadastro" value="true" scope="view"/>
+			 <c:set var="digitacaoLiberada" value="false" scope="view" />
+			 
+				<p:panel header="Cadastro de Cep" id="panelCadastro">
+					
+					<h:panelGrid id="gridCep" columns="3">
+
+						<p:column>
+							<p:row>
+								<h:outputLabel for="id" 
+											   value="ID : " 
+											   id="labelId"
+											   style="width:300px;" />
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:inputText id="id" 
+											 styleClass="estiloPequeno0"
+											 value="#{cepBeanView.objetoSelecionado.cep_id}"
+											 readonly="true" />
+							</p:row>							
+						</p:column>
+						<p:column />
+	
+						<p:column>
+							<p:row>
+								<h:outputLabel for="codigo" 
+											   id="labelEnt_cep" 
+											   value="CEP : " />
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:inputMask id="codigo" 
+											 mask="99999-999"
+											 value="#{cepBeanView.objetoSelecionado.cep_codigo}"
+											 required="true" 
+											 requiredMessage="Informe o campo cep."
+											 maxlength="100" 
+											 styleClass="estiloPequeno0">				
+	 									<p:ajax event="blur" 
+												listener="#{cepBeanView.pesquisaCep}"
+												update="logradouro bairro estado cidade"/>
+								</p:inputMask>	
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:message for="codigo" />
+							</p:row>
+						</p:column>
+
+						<p:column>
+							<p:row>
+								<h:outputLabel for="logradouro" 
+											   id="labelLogradouro"
+											   value="Logradouro *: " />
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:inputText id="logradouro"
+											 value="#{cepBeanView.objetoSelecionado.registroLogradouro.log_nome}"
+											 readonly="#{cepBeanView.getDigitarLogradouro()}"
+											 required="true"
+ 											 requiredMessage="Informe o campo Logradouro."
+											 maxlength="100" 
+											 styleClass="estiloGrande1"/>
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:message for="logradouro" />
+							</p:row>
+						</p:column>
+	
+						<p:column>
+							<p:row>
+								<h:outputLabel for="bairro" 
+											   id="labelBairro"
+											   value="Bairro *: " />
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:inputText id="bairro"	
+											 value="#{cepBeanView.objetoSelecionado.registroBairro.bai_nome}"
+											 readonly="#{cepBeanView.getDigitarBairro()}"
+											 required="true" 
+											 requiredMessage="Informe o campo bairro."
+											 maxlength="100" 
+											 styleClass="estiloGrande1"/>
+							</p:row>
+						</p:column>
+
+						<p:column>
+							<p:row>
+								<p:message for="bairro" />
+							</p:row>
+						</p:column>
+
+						<p:column>
+							<p:row>
+								<h:outputLabel for="estado" 
+											   id="labelEstado"
+											   value="Estado *: " />
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:selectOneMenu id="estado"
+										 	 	 value="#{cepBeanView.objetoSelecionado.registroEstado.est_nome}"
+										 		 readonly="#{cepBeanView.getDigitarEstado()}"
+										 		 required="true" 
+										 		 requiredMessage="Informe o campo Estado."
+										 		 maxlength="50" 
+										 		 styleClass="estiloPequeno0" >
+									<f:selectItem itemLabel="#{cepBeanView.objetoSelecionado.registroEstado.est_nome}"
+												  itemValue="#{cepBeanView.objetoSelecionado.registroEstado.est_nome}"/>
+									<f:selectItems value="#{estadoBeanView.estados}" />
+								</p:selectOneMenu>
+							</p:row>
+						</p:column>
+
+						<p:column>
+							<p:row>
+								<p:message for="estado" />
+							</p:row>
+						</p:column>
+							
+						<p:column>
+							<p:row>
+								<h:outputLabel for="cidade" 
+											   id="labelcidade"
+											   value="Cidade *: " />
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:inputText id="cidade"
+											 value="#{cepBeanView.objetoSelecionado.registroCidade.cid_nome}"
+											 readonly="#{cepBeanView.getDigitarCidade()}"
+											 required="true" 
+											 requiredMessage="Informe o campo Cidade."
+											 maxlength="100" styleClass="estiloGrande1" />
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:message for="cidade" />
+							</p:row>
+						</p:column>
+					</h:panelGrid>
+				</p:panel>
+	
+				<div class="espacoBranco" />
+	
+				<util:botoesCrud 
+					managedBeanView="#{cepBeanView}"
+					camposReload=":formTemplate:msg, tableResult" 
+					botaoNovo = "#{contextoBean.possuiAcesso('CEO', 'ADMIN')}"
+					botaoSalvar = "#{contextoBean.possuiAcesso('CEO', 'ADMIN') and cepBeanView.objetoSelecionado.cep_id == null}"
+					botaoAtualizar = "#{contextoBean.possuiAcesso('CEO', 'ADMIN') and cepBeanView.objetoSelecionado.cep_id != null}"
+					botaoExcluir = "#{contextoBean.possuiAcesso('CEO', 'ADMIN')}"/>
+			</h:form>
+			
+			<script type="text/javascript" charset="UTF-8">
+				addFocoAoCampo('codigo');
+				gerenciaTeclaEnter();
+			</script>
+			
+			<div class="espacoBranco" />
+	
+			<p:dataTable id="tableResult" 
+						 value="#{cepBeanView.list}" 
+						 rendered="#{cepBeanView.list.list.size() > 0}"
+						 var="objeto" 
+						 rows="10" 
+						 paginatorPosition="bottom" 
+						 paginator="true"
+						 lazy="true"
+						 emptyMessage="Não existem registros para exibição."
+						 paginatorTemplate=" {FirstPageLink}
+										   	 {PreviousPageLink} 
+										   	 {PageLinks} 
+		 							   		 {NextPageLink} 
+		 							   		 {LastPageLink} 
+		 							   		 {RowsPerPageDropdown}">
+	
+				<ui:include src="/resources/components/colunasDataTableCep.xhtml" />
+	
+			</p:dataTable>
+			
+			
+<!-- 
+			<p:dialog widgetVar="logradouroDialog" 
+					  id="logradouroDialog" 
+					  width="1000"
+					  modal="true" 
+					  resizable="false" 
+					  height="400"
+					  header="Consulta logradouro" 
+					  appendToBody="false" 
+					  dynamic="true">
+				<util:pesquisa managedBeanView="#{logradouroBeanView}"
+							   nomePesquisa="Pesquisa de logradouro"
+							   colunasGridDataTableList="/resources/components/colunasDataTableCep.xhtml"
+							   exibirBotaoAdd="true" 
+							   ocultaNovo="true"
+							   funcaoJavaScript="logradouroDialog.hide(),addLogradouroSelecionadoCep('#{objeto.json}')">
+				</util:pesquisa>
+			</p:dialog>
+ -->				
+			
+		</ui:define>
+	</ui:composition>
+	
+
+</html>
+								 
+											 

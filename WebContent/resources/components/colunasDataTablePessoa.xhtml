@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:sec="http://www.springframework.org/security/facelets/tags">
+
+	<p:column style="width:50px;">
+		<center>
+			<f:facet name="header">ID</f:facet>
+			<h:outputText value="#{objeto.pes_id}" />
+		</center>
+	</p:column>
+		
+	<p:column>
+		<right>
+			<f:facet name="header">Nome</f:facet>
+			<h:outputText value="#{objeto.pes_nome}" />
+		</right>
+	</p:column>
+		
+	<sec:ifAnyGranted roles="CEO, ADMIN">
+		<p:column style="width:50px;" id="colExcluir">
+			<center>
+				<f:facet name="header">Excluir</f:facet>
+				<c:choose>
+					<c:when test="${isCadastro == false}">								<!--  Variavel criada form do cad_banco.xhtml semelhante ao if -->
+						<p:commandLink  id="buttonColunaExcluir"	
+										action="#{pessoaBeanView.excluir}"
+							 			ajax="true" 
+							 			immediate="true"
+										partialSubmit="true" 
+										process="@this" 
+										update="tableResult"
+										onfocus="addFocoAoCampo('nome');"
+										onclick="if(!confirm('Confirma a exclusão : #{objeto.pes_nome}?')) return false;">
+										<h:graphicImage library="img" 
+														name="excluir16.png"
+														styleClass="bordaImagem" />
+											<f:setPropertyActionListener value="#{objeto}" 
+																		 target="#{pessoaBeanView.objetoSelecionado}"/>
+						</p:commandLink>
+					</c:when>
+					<c:otherwise>														<!--  caso contrario / senão  -->
+						<p:commandLink id="buttonColunaExcluir"	
+						               action="#{pessoaBeanView.excluir}"
+							 		   ajax="false" 
+							 		   immediate="true"
+									   partialSubmit="true" 
+									   process="@this" 
+									   update="tableResult"
+									   onfocus="addFocoAoCampo('nome');"
+									   onclick="if(!confirm('Confirma a exclusão : #{objeto.pes_nome}?')) return false;">
+							<h:graphicImage library="img" 
+											name="excluir16.png"
+											styleClass="bordaImagem" />
+								<f:setPropertyActionListener value="#{objeto}"
+															 target="#{pessoaBeanView.objetoSelecionado}" />
+						</p:commandLink>
+					</c:otherwise>
+				</c:choose>
+			</center>
+		</p:column>
+	</sec:ifAnyGranted>
+
+	<sec:ifAnyGranted roles="CEO, ADMIN">
+		<p:column style="width:50px;" id="colEditar">
+			<center>
+				<f:facet name="header">Editar</f:facet>
+				<p:commandLink id="buttonColunaEditar"	
+							   immediate="true" 
+							   action="#{pessoaBeanView.editar}"
+							   ajax="true" 
+							   oncomplete="addFocoAoCampo('nome');"> <!-- oncomplete executa depois do comando -->
+					<h:graphicImage library="img" 
+									name="editar16.png"
+									styleClass="bordaImagem" />
+						<f:setPropertyActionListener value="#{objeto}"
+													 target="#{pessoaBeanView.objetoSelecionado}" />
+				</p:commandLink>
+			</center>
+		</p:column>
+	</sec:ifAnyGranted>
+</html>

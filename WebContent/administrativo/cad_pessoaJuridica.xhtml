@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:sec="http://www.springframework.org/security/facelets/tags"
+	xmlns:util="http://java.sun.com/jsf/composite/components"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition template="/templates/templatePrincipal.xhtml">
+		<ui:define name="corpo">
+			<h:form id="formCadastro" prependId="false">
+				<c:set var="isCadastro" value="true" scope="view" />
+				
+				<p:panel header="Cadastro de Pessoa Jurídica" id="panelCadastro">
+					<p:panelGrid id="gridPessoaJuridica" columns="3">
+						<p:column>
+							<p:row>
+								<h:outputLabel id="labelId" 
+											   for="id"
+											   value="Código : " 
+											   style="estiloPequeno0" />
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:inputText id="id" 
+											 styleClass="estiloPequeno0"
+											 value="#{pessoaJuridicaBeanView.objetoSelecionado.pju_id}"
+											 readonly="true" />
+							</p:row>						
+							<p:row>
+								<h:outputLabel id="labelDataCadastro"
+											   for="pju_dataCadastro" 
+											   value="Data do cadastro : "
+											   style="padding-left: 20px;" />
+							</p:row>						
+						
+					    	<p:inputText id="pju_dataCadastro" 
+					    				 readonly="true" 
+					    				 style="estiloDataCurta"
+										 value="#{pessoaJuridicaBeanView.objetoSelecionado.pju_dataCadastro}">
+								<f:convertDateTime locale="pt_BR" 
+												   pattern="dd/MM/yyyy HH:mm:ss"
+												   dateStyle="long" 
+												   timeStyle="full" 
+												   timeZone="GMT-03:00" />
+							</p:inputText>						
+						</p:column>
+						
+						<p:column />
+
+						<p:column>
+							<p:row>
+								<h:outputLabel value="CNPJ * : " 
+											   id="labelCnpj"
+											   for="pju_cnpj"/>
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:inputMask id="pju_cnpj"
+											 mask="99.999.999/9999-99"
+											 value="#{pessoaJuridicaBeanView.objetoSelecionado.pju_cnpj}"
+											 required="true"
+											 requiredMessage="Informe o campo CNPJ"
+											 maxlength="20" 
+											 styleClass="estiloMedio0" >
+								</p:inputMask>
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:message for="pju_cnpj" />
+							</p:row>
+						</p:column>
+
+						<p:column>
+							<p:row>
+								<h:outputLabel value="Inscrição Estadual : " 
+											   id="labelIe"
+											   for="pju_ie"/>
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:inputText id="pju_ie"
+											 value="#{pessoaJuridicaBeanView.objetoSelecionado.pju_ie}"
+											 required="false"
+											 maxlength="30" 
+											 styleClass="estiloMedio0">
+								</p:inputText>
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:message for="pju_ie" />
+							</p:row>
+						</p:column>
+
+						<p:column>
+							<p:row>
+								<h:outputLabel value="Data Fundação : " 
+											   id="labelDataFundacao"
+											   for="pju_dataFundacao"/>
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>							
+								<p:calendar id="pju_dataFundacao"
+											locale="pt"
+											showButtonPanel="true" 
+											showOn="button"
+											styleClass="estiloPequeno0" 
+											pattern="dd/MM/yyyy" 
+											navigator="true"
+											value="#{pessoaJuridicaBeanView.objetoSelecionado.pju_dataFundacao}"
+											required="false">
+								</p:calendar>
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:message for="pju_dataFundacao" />
+							</p:row>
+						</p:column>
+
+						<p:column>
+							<p:row>
+								<h:outputLabel value="Logotipo : " 
+											   id="labelFoto"
+											   for="pju_foto"/>
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:inputText id="pju_foto"
+											 value="#{pessoaJuridicaBeanView.objetoSelecionado.pju_foto}"
+											 required="false"
+											 maxlength="255" 
+											 styleClass="estiloGrande1">
+								</p:inputText>
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:message for="pju_foto" />
+							</p:row>
+						</p:column>
+
+						<p:column rendered="#{pessoaJuridicaBeanView.objetoSelecionado.pju_id != null}">
+							<p:row>
+								<h:outputLabel id="labelInativo" 
+											   for="pju_inativo" 
+											   value="Inativo : "/>
+							</p:row>
+						</p:column>
+						<p:column rendered="#{pessoaJuridicaBeanView.objetoSelecionado.pju_id != null}">
+							<p:row>
+								<p:selectBooleanCheckbox id="pju_inativo"
+														 value="#{pessoaJuridicaBeanView.objetoSelecionado.pju_inativo}" />
+							</p:row>
+						</p:column>
+						<p:column rendered="#{pessoaJuridicaBeanView.objetoSelecionado.pju_id != null}">
+							<p:row>
+								<p:message for="pju_inativo" />
+							</p:row>
+						</p:column>
+					</p:panelGrid>
+				</p:panel>
+
+ 				<div class="espacoBranco" />
+ 			
+				<util:botoesCrud managedBeanView="#{pessoaJuridicaBeanView}"
+						  		 camposReload=":formTemplate:msg, tableResult"
+								 botaoNovo = "#{contextoBean.possuiAcesso('CEO')}"
+								 botaoSalvar = "#{contextoBean.possuiAcesso('CEO') and pessoaJuridicaBeanView.objetoSelecionado.pju_id == null}"
+								 botaoAtualizar = "#{contextoBean.possuiAcesso('CEO') and pessoaJuridicaBeanView.objetoSelecionado.pju_id != null}"
+								 botaoExcluir = "#{contextoBean.possuiAcesso('CEO')}"/>					
+			</h:form>
+			
+			<script type="text/javascript" charset="UTF-8">
+				addFocoAoCampo('pju_cnpj');
+				gerenciaTeclaEnter();
+			</script>
+
+			<div class="espacoBranco" />
+
+			<p:dataTable id="tableResult" 
+						 value="#{pessoaJuridicaBeanView.list}" 
+						 rendered="#{pessoaJuridicaBeanView.list.list.size() > 0}"
+						 var="objeto" 
+						 rows="10" 
+						 paginatorPosition="bottom" 
+						 paginator="true"
+						 emptyMessage="Não existem usuários para exibição." 
+						 lazy="true"
+						 paginatorTemplate=" {FirstPageLink}
+						  			   	     {PreviousPageLink} 
+						  			   	     {PageLinks} 
+	 							   			 {NextPageLink} 
+	 							   			 {LastPageLink} 
+	 							   			 {RowsPerPageDropdown}">
+				<ui:include
+					src="/resources/components/colunasDataTablePessoaJuridica.xhtml" />
+			</p:dataTable>
+		
+	</ui:define>
+</ui:composition>
+</html>

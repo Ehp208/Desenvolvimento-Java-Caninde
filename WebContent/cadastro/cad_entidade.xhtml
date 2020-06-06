@@ -1,0 +1,664 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:sec="http://www.springframework.org/security/facelets/tags"
+	xmlns:util="http://java.sun.com/jsf/composite/components"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition template="/templates/templatePrincipal.xhtml">
+		<ui:define name="corpo">
+			<h:form id="formCadastro" prependId="false" >
+				<c:set var="isCadastro" value="true" scope="view"/>
+				<p:panel header="Cadastro de Entidade" id="panelCadastro">
+					<h:panelGrid id="gridEntidade" columns="3">
+	
+						<p:column>
+							<p:row>
+								<h:outputLabel value="ID : "
+											   id="labelId"
+											   for="id"  
+										       style="width:300px;" />
+							</p:row>
+						</p:column>										
+						<p:column>
+							<p:row>
+								<p:inputText id="id" 
+											 styleClass="estiloMini2"
+											 value="#{entidadeBeanView.objetoSelecionado.ent_id}"
+											 readonly="true"/>
+							</p:row>
+							
+							<p:row>
+								<h:outputLabel value="Data do cadastro : " 
+											   id="labelDataCadastro" 
+											   for="ent_datacadastro" 
+									 		   style="padding-left: 20px;" />
+							</p:row>
+							<p:row>
+								<p:inputText id="ent_datacadastro" 
+											 readonly="true"
+											 value="#{entidadeBeanView.objetoSelecionado.ent_datacadastro}">
+									<f:convertDateTime locale="pt_BR" 
+													   pattern="dd/MM/yyyy HH:mm:ss"
+													   dateStyle="long" 
+													   timeStyle="full" 
+													   timeZone="GMT-03:00" />
+								</p:inputText>
+							</p:row>						
+						</p:column>
+										
+						<p:column />
+	
+						<p:column>
+							<p:row>
+								<h:outputLabel value="Tipo pessoa * : "
+											   id="labelTipoPessoa"
+											   for="ent_tipopessoa"/>
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:selectOneMenu id="ent_tipopessoa" 
+												 style="width:123px;"
+												 value="#{entidadeBeanView.objetoSelecionado.ent_tipopessoa}"
+									  			 required="#{entidadeBeanView.getBotaoNovoAcionado()}" 
+									  			 requiredMessage="Informe o campo tipo pessoa.">							  			 
+									<f:selectItems value="#{entidadeBeanView.listTipoPessoa}" />
+									<p:ajax event="change" 
+											listener="#{entidadeBeanView.definePessoa}"
+											update="panelCadastro"/>
+								</p:selectOneMenu>
+							</p:row>
+
+							<p:row>
+								<h:outputLabel value="Perfil *: "
+											   id="labelTipoCadastro"
+											   for="tipocadastro"
+											   style="padding-left: 50px;"/>
+							</p:row>
+
+							<p:row>
+								<p:selectOneMenu id="tipocadastro" 
+												 style="width:123px;"
+												 value="#{entidadeBeanView.objetoSelecionado.ent_tipocadastro}"
+									  			 required="true"
+	 										 	 requiredMessage="Campo Perfil obrigatório" >
+									<f:selectItems value="#{entidadeBeanView.listTipoCadastro}" />
+									<p:ajax event="change" 
+											listener="#{entidadeBeanView.defineCadastro}"
+											update="panelCadastro"/>
+								</p:selectOneMenu>
+							</p:row>
+						</p:column>
+										
+						<p:column />
+	
+						<p:column rendered="#{entidadeBeanView.getDigitarPessoaFisica()}" >
+							<p:row>
+								<h:outputLabel value="CPF * : " 
+											   id="labelCpf"
+											   for="pfi_cpf"/>
+							</p:row>
+						</p:column>
+						<p:column rendered="#{entidadeBeanView.getDigitarPessoaFisica()}" >
+							<p:row>
+								<p:inputMask id="pfi_cpf"
+											 value="#{pessoaFisicaBeanView.objetoSelecionado.pfi_cpf}"
+											 mask="999.999.999-99"
+											 readonly="#{entidadeBeanView.getBotaoNovoAcionado()}"
+											 required="#{entidadeBeanView.objetoSelecionado.ent_id != null}"
+											 placeholder="Informe o CPF."
+											 maxlength="20" 
+											 styleClass="estiloPequeno2"
+	 										 requiredMessage="Campo CPF obrigatório"
+	 										 ajax="false"
+	 										 immediate="true"							 		 
+											 process="@this">
+									<p:ajax event="blur" 
+											process="@this"
+											listener="#{pessoaFisicaBeanView.pesquisaCpf}"
+											update="pfi_rg pfi_nascimento pfi_foto" />										 
+								 </p:inputMask>
+							</p:row>
+							<p:row>
+								<h:outputLabel value="Identidade: " 
+											   id="labelRg"
+											   for="pfi_rg"										    
+											   style="padding-left: 40px;"/>
+							</p:row>
+							<p:row>
+								<p:inputText id="pfi_rg"
+											 value="#{pessoaFisicaBeanView.objetoSelecionado.pfi_rg}"
+											 readonly="#{pessoaFisicaBeanView.getDigitarDadosPessoaFisica()}"
+											 maxlength="20" 
+											 styleClass="estiloPequeno2"/>
+							</p:row>
+						</p:column>
+	
+						<p:column rendered="#{entidadeBeanView.getDigitarPessoaFisica()}" />
+	
+						<p:column rendered="#{entidadeBeanView.getDigitarPessoaFisica()}" >
+							<p:row>
+								<h:outputLabel value="Data Nascimento : " 
+											   id="labelNascimento"
+											   for="pfi_nascimento"/>
+							</p:row>
+						</p:column>
+						<p:column rendered="#{entidadeBeanView.getDigitarPessoaFisica()}" >
+							<p:row>									 
+								<p:calendar id="pfi_nascimento" 
+											value="#{pessoaFisicaBeanView.objetoSelecionado.pfi_dataNascimento}" 
+											locale="pt" 
+		    								readonly="#{pessoaFisicaBeanView.getDigitarDadosPessoaFisica()}"
+											showButtonPanel="true" 
+											showOn="button"
+											style="estiloPequeno1" 
+											pattern="dd/MM/yyyy" 
+											readonlyInput="true"
+											navigator="true"/>									 
+							</p:row>
+						</p:column>
+						<p:column rendered="#{entidadeBeanView.getDigitarPessoaFisica()}" >
+							<p:row>
+								<p:message for="pfi_nascimento" />
+							</p:row>
+						</p:column>
+			
+						<p:column rendered="#{entidadeBeanView.getDigitarPessoaFisica()}" >
+							<p:row>
+								<h:outputLabel value="Foto : " 
+											   id="labelFoto"
+											   for="pfi_foto"/>
+							</p:row>
+						</p:column>
+						<p:column rendered="#{entidadeBeanView.getDigitarPessoaFisica()}" >
+							<p:row>
+								<p:inputText id="pfi_foto"
+											 value="#{pessoaFisicaBeanView.objetoSelecionado.pfi_foto}"
+											 readonly="#{pessoaFisicaBeanView.getDigitarDadosPessoaFisica()}"
+											 required="false" 
+											 requiredMessage="Informe a foto"
+											 maxlength="100" 
+											 styleClass="estiloMedio2"/>
+							</p:row>
+						</p:column>
+						<p:column rendered="#{entidadeBeanView.getDigitarPessoaFisica()}" >
+							<p:row>
+								<p:message for="pfi_foto" />
+							</p:row>
+						</p:column>
+								
+						<p:column rendered="#{entidadeBeanView.getDigitarPessoaJuridica()}" >
+							<p:row>
+								<h:outputLabel value="CNPJ * : " 
+											   id="labelCnpj"
+											   for="pju_cnpj"/>
+							</p:row>
+						</p:column>
+						<p:column rendered="#{entidadeBeanView.getDigitarPessoaJuridica()}" >
+							<p:row>
+								<p:inputMask id="pju_cnpj"
+											 value="#{pessoaJuridicaBeanView.objetoSelecionado.pju_cnpj}"
+											 mask="99.999.999/9999-99"
+ 											 readonly="#{entidadeBeanView.getBotaoNovoAcionado()}"											 
+											 required="#{entidadeBeanView.objetoSelecionado.ent_id != null}"
+	 										 requiredMessage="Campo CNJP obrigatório"							 		 
+											 maxlength="20" 
+											 styleClass="estiloMedio0"
+	 										 ajax="false"
+	 										 immediate="true"							 		 
+											 process="@this">
+									<p:ajax event="blur" 
+											process="@this"
+											listener="#{pessoaJuridicaBeanView.pesquisaCnpj}"
+											update="pju_ie pju_fundacao pju_foto" />										 
+							 	</p:inputMask>
+							</p:row>
+							<p:row>
+								<h:outputLabel value="Inscrição Estadual: " 
+											   id="labelIe"
+											   for="pju_Ie"
+											   style="padding-left: 10px;"/>
+							</p:row>	
+							<p:row>
+								<p:inputText id="pju_ie"
+											 value="#{pessoaJuridicaBeanView.objetoSelecionado.pju_ie}"
+											 readonly="#{pessoaJuridicaBeanView.getDigitarDadosPessoaJuridica()}"
+											 required="false" 
+											 requiredMessage="Informe a Inscrição Estadual."
+											 maxlength="30" 
+											 styleClass="estiloMedio0"/>
+							</p:row>
+						</p:column>
+		
+						<p:column rendered="#{entidadeBeanView.getDigitarPessoaJuridica()}" />
+	
+						<p:column rendered="#{entidadeBeanView.getDigitarPessoaJuridica()}" >
+							<p:row>
+								<h:outputLabel value="Data Fundação : " 
+											   id="labelFundacao"
+											   for="pju_dataFundacao"/>
+							</p:row>
+						</p:column>
+						<p:column rendered="#{entidadeBeanView.getDigitarPessoaJuridica()}" >
+							<p:row>
+								<p:calendar id="pju_fundacao" 
+											value="#{pessoaJuridicaBeanView.objetoSelecionado.pju_dataFundacao}" 
+										    readonly="#{pessoaJuridicaBeanView.getDigitarDadosPessoaJuridica()}"
+											locale="pt" 
+											showButtonPanel="true" 
+											showOn="button"
+											style="estiloPequeno1" 
+											pattern="dd/MM/yyyy" 
+											readonlyInput="true"
+											navigator="true"/>										 
+							</p:row>
+						</p:column>
+						<p:column rendered="#{entidadeBeanView.getDigitarPessoaJuridica()}" >
+							<p:row>
+								<p:message for="pju_fundacao" />
+							</p:row>
+						</p:column>
+		
+						<p:column rendered="#{entidadeBeanView.getDigitarPessoaJuridica()}" >
+							<p:row>
+								<h:outputLabel value="Logotipo : " 
+											   id="labelLogo"
+											   for="pju_foto"/>
+							</p:row>
+						</p:column>
+						<p:column rendered="#{entidadeBeanView.getDigitarPessoaJuridica()}" >
+							<p:row>
+								<p:inputText id="pju_foto"							 
+											 value="#{pessoaJuridicaBeanView.objetoSelecionado.pju_foto}"
+											 readonly="#{pessoaJuridicaBeanView.getDigitarDadosPessoaJuridica()}"
+											 required="false" 
+											 requiredMessage="Informe o Logotipo"
+											 styleClass="estiloMedio2"
+											 maxlength="100"/>
+							</p:row>
+						</p:column>
+						<p:column rendered="#{entidadeBeanView.getDigitarPessoaJuridica()}" >
+							<p:row>
+								<p:message for="pju_foto" />
+							</p:row>
+						</p:column>
+	
+						<p:column>
+							<p:row>
+								<h:outputLabel value="Nome * : " 
+											   id="labelNome"
+											   for="ent_nome"/>
+							</p:row>
+						</p:column>
+	
+						<p:column>
+							<p:row>
+								<p:inputText id="ent_nome"
+											    value="#{entidadeBeanView.objetoSelecionado.ent_nome}"		
+											    required="true"
+	 										    requiredMessage="Informe o campo nome."							 		 
+		   										styleClass="estiloMedio2"
+												placeholder="Digite o Nome">
+									<p:ajax event="blur" 
+											listener="#{entidadeBeanView.existeNomeIdentico}"/>				
+								</p:inputText>
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:message for="ent_nome" />
+							</p:row>
+						</p:column>
+ 												
+						<p:column>
+							<p:row>
+								<h:outputLabel for="codigo" 
+											   id="labelEnt_cep" 
+											   value="CEP : " />
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:inputMask id="codigo" 
+											 mask="99999-999"
+											 value="#{cepBeanView.objetoSelecionado.cep_codigo}"
+											 required="true" 
+											 requiredMessage="Informe o campo CEP."
+											 maxlength="100" 
+											 styleClass="estiloPequeno0">				
+									<p:ajax process="@this"
+											event="blur" 
+											listener="#{cepBeanView.pesquisaCep}"
+											update="buttonCadastroLogradouro logradouro buttonCadastroBairro bairro estado cidade"
+											oncomplete="addFocoAoCampo(cep_numero);" />	
+								</p:inputMask>	
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:message for="codigo" />
+							</p:row>
+						</p:column>
+
+						<p:column>
+							<p:row>
+								<h:outputLabel for="logradouro" 
+											   id="labelLogradouro"
+											   value="Logradouro *: " />
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:commandButton id="buttonCadastroLogradouro" 
+												 icon="imgAdiciona"
+												 action="#{logradouroBeanView.cadastraLogradouro}"
+												 disabled="#{cepBeanView.getDigitarLogradouro()}"
+	 										 	 requiredMessage="Campo Logradouro obrigatório"							 		 
+												 styleClass="buttonAdiciona" 
+												 process="@this">
+									<p:ajax event="dialogReturn" 										
+											process="@this"
+											update="logradouro" />
+								</p:commandButton>	
+								<p:selectOneMenu id="logradouro"														 
+										 	 	 value="#{logradouroBeanView.objetoSelecionado.log_nome}"
+										 		 disabled="#{cepBeanView.getDigitarLogradouro()}"
+										 		 converter="logradouroConverter"
+												 immediate="true"
+												 filter="true"
+												 filterMatchMode="startsWith"
+										 		 style="width:330px"
+										 		 requiredMessage="Informe o Logradouro"
+										 		 required="true"										 		 
+										 		 maxlength="100">
+									<f:selectItem itemLabel="#{logradouroBeanView.objetoSelecionado.log_nome}"
+											  	  itemValue="#{logradouroBeanView.objetoSelecionado.log_id}"
+											  	  noSelectionOption="true"/>
+									<f:selectItems value="#{logradouroBeanView.logradouros}"/>
+								</p:selectOneMenu>
+							</p:row>
+
+						</p:column>														
+						<p:column>
+							<p:row>
+								<p:message for="logradouro" />
+							</p:row>
+						</p:column>
+	
+						<p:column>
+							<p:row>
+								<h:outputLabel for="cep_numero"  
+											   id="labelNumero"
+											   value="Número *: " />
+							</p:row>
+						</p:column>										
+						<p:column>
+							<p:row>
+								<p:inputText id="cep_numero" 
+											 value="#{entidadeBeanView.objetoSelecionado.ent_numero}"
+											 required="true"
+	 										 requiredMessage="Campo número obrigatório."
+											 maxlength="6" 
+											 styleClass="estiloMini2"/>
+							</p:row>
+							
+							<p:row>
+								<h:outputLabel for="cep_complemento"  
+											   id="labelComplemento"
+											   value="Complemento : " 
+											   style="padding-left: 10px;" />
+							</p:row>
+							
+							<p:row>
+								<p:inputText id="cep_complemento" 
+											 value="#{entidadeBeanView.objetoSelecionado.ent_complemento}"
+											 required="false"
+											 maxlength="30" 
+											 styleClass="estiloMedio0"/>
+							</p:row>
+						</p:column>
+	
+						<p:column />
+	
+						<p:column>
+							<p:row>
+								<h:outputLabel for="bairro" 
+											   id="labelBairro"
+											   value="Bairro *: " />
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:commandButton id="buttonCadastroBairro" 
+												 icon="imgAdiciona"
+												 action="#{bairroBeanView.cadastraBairro}"
+												 disabled="#{cepBeanView.getDigitarBairro()}"
+	 										 	 requiredMessage="Campo Bairro obrigatório."							 		 											 
+												 styleClass="buttonAdiciona" 
+												 process="@this">
+									<p:ajax event="dialogReturn" 										
+											process="@this"
+											update="bairro" />
+								</p:commandButton>									
+								<p:selectOneMenu id="bairro"							 
+										 	 	 value="#{bairroBeanView.objetoSelecionado.bai_nome}"
+										 		 disabled="#{cepBeanView.getDigitarBairro()}"
+										 		 converter="bairroConverter"
+												 immediate="true"
+												 filter="true"
+												 filterMatchMode="startsWith"
+										 		 style="width:330px"
+										 		 requiredMessage="Informe o Bairro"
+										 		 required="true"
+										 		 maxlength="100">
+									<f:selectItem itemLabel="#{bairroBeanView.objetoSelecionado.bai_nome}"
+											  	  itemValue="#{bairroBeanView.objetoSelecionado.bai_id}" />
+									<f:selectItems value="#{bairroBeanView.bairros}"/>
+								</p:selectOneMenu>
+							</p:row>
+						</p:column>														
+						<p:column>
+							<p:row>
+								<p:message for="bairro" />
+							</p:row>
+						</p:column>
+	
+						<p:column>
+							<p:row>
+								<h:outputLabel for="estado" 
+											   id="labelestado"
+											   value="Estado: " />
+							</p:row>
+						</p:column>										
+						<p:column>
+							<p:row>
+								<p:inputText id="estado" 
+										 	 value="#{cepBeanView.objetoSelecionado.registroEstado.est_nome}"
+											 disabled="#{cepBeanView.getDigitarEstado()}"
+										 	 styleClass="estiloPequeno2" />
+							</p:row>
+						</p:column>
+						
+						<p:column>
+							<p:row>
+								<p:message for="estado" />
+							</p:row>
+						</p:column>
+	
+						<p:column>
+							<p:row>
+								<h:outputLabel for="cidade" 
+											   id="labelcidade"
+											   value="Cidade: "/>
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:inputText id="cidade"
+	   								 		 disabled="#{cepBeanView.getDigitarCidade()}"
+										  	 value="#{cepBeanView.objetoSelecionado.registroCidade.cid_nome}"
+											 styleClass="estiloMedio2" />
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:message for="cidade" />
+							</p:row>
+						</p:column>						
+	
+						<p:column>
+							<p:row>
+								<h:outputLabel for="fixo"  
+											   id="labelfixo"
+											   value="Telefone Fixo: " />
+							</p:row>
+						</p:column>										
+						<p:column>
+							<p:row>
+								<p:inputMask id="fixo" 
+											 value="#{entidadeBeanView.objetoSelecionado.ent_fone}"
+											 mask="(99) 9999-9999"
+											 required="false"
+											 maxlength="20" 
+											 styleClass="estiloPequeno1"/>
+							</p:row>
+							
+							<p:row>
+								<h:outputLabel for="celular"  
+											   id="labelCelular"
+											   value="Celular : " 
+											   style="padding-left: 15px;" />
+							</p:row>
+							<p:row>
+								<p:inputMask id="celular" 
+											 value="#{entidadeBeanView.objetoSelecionado.ent_celular}"
+											 mask="(99) 9 9999-9999"
+											 maxlength="20" 
+											 styleClass="estiloPequeno2"/>
+							</p:row>
+						</p:column>
+	
+						<p:column />
+	
+						<p:column>
+							<p:row>
+								<h:outputLabel for="email" 
+											   id="labelEmail"
+											   value="E-mail: " />
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:inputText id="email"
+											 value="#{entidadeBeanView.objetoSelecionado.ent_email}"
+											 maxlength="100" 
+											 styleClass="estiloMedio2"/>
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:message for="email" />
+							</p:row>
+						</p:column>
+								
+ 								
+						<p:column rendered="#{entidadeBeanView.getDigitarMotorista()}">
+							<p:row>
+								<h:outputLabel value="Agenciador *: "
+											   id="labelAgenciador"
+											   for="agenciador"/>
+							</p:row>
+						</p:column>
+						<p:column rendered="#{entidadeBeanView.getDigitarMotorista()}">
+							<p:row>
+								<p:selectOneMenu id="agenciador"														 
+										 	 	 value="#{agenciadorBeanView.objetoSelecionado.age_nome}"
+										 		 converter="agenciadorConverter"
+												 immediate="true"
+												 filter="true"
+												 filterMatchMode="startsWith"
+										 		 style="width:330px"
+										 		 requiredMessage="Informe o Agenciador"
+										 		 required="true"										 		 
+										 		 maxlength="100">
+									<f:selectItem itemLabel="#{agenciadorBeanView.objetoSelecionado.age_nome}"
+											  	  itemValue="#{agenciadorBeanView.objetoSelecionado.age_id}"
+											  	  noSelectionOption="false"/>
+									<f:selectItems value="#{agenciadorBeanView.agenciadores}"/>
+								</p:selectOneMenu>
+							</p:row>
+						</p:column>
+						<p:column rendered="#{entidadeBeanView.getDigitarMotorista()}">
+							<p:row>
+								<p:message for="agenciador" />
+							</p:row>					
+						</p:column>
+
+						<p:column>
+							<p:row>
+								<h:outputLabel id="labelInativo" 
+											   for="ent_inativo" 
+											   value="Inativo : "/>
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:selectBooleanCheckbox id="ent_inativo"
+														 value="#{entidadeBeanView.objetoSelecionado.ent_inativo}" />
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:message for="ent_inativo" />
+							</p:row>
+						</p:column>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+					</h:panelGrid>
+				</p:panel>
+
+				<div class="espacoBranco" />
+		
+				<util:botoesCrud managedBeanView="#{entidadeBeanView}"
+			 					 camposReload=":formTemplate:msg, tableResult"
+								 botaoSalvar = "#{contextoBean.possuiAcesso('USER') and entidadeBeanView.objetoSelecionado.ent_id == null}"
+								 botaoAtualizar = "#{contextoBean.possuiAcesso('USER') and entidadeBeanView.objetoSelecionado.ent_id != null}" />
+		
+			</h:form>
+			
+			<script type="text/javascript" charset="UTF-8">
+				addFocoAoCampo('tipocadastro');
+				gerenciaTeclaEnter();
+	
+			</script>
+			
+			<div class="espacoBranco" />
+	
+			<p:dataTable id="tableResult" value="#{entidadeBeanView.list}" rendered="#{entidadeBeanView.list.list.size() > 0}"
+ 						 var="objeto" rows="10" paginatorPosition="bottom" paginator="true"
+						 lazy="true"
+						 emptyMessage="Não existem dados para exibição."
+						 paginatorTemplate=" {FirstPageLink}
+										     {PreviousPageLink} 
+									    	 {PageLinks} 
+									    	 {NextPageLink} 
+									    	 {LastPageLink} 
+									    	 {RowsPerPageDropdown}">
+	
+				<ui:include src="/resources/components/colunasDataTableEntidade.xhtml" />
+	
+			</p:dataTable>
+		</ui:define>
+	</ui:composition>
+</html>
